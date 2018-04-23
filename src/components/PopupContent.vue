@@ -1,6 +1,11 @@
 <template>
   <div class="popup-content" >
-    {{ label }}
+    <div>
+      <strong> {{ label }}:</strong>
+    </div>
+    <div>
+      Loan Size:  {{ loansize }}
+    </div>
   </div>
 </template>
 
@@ -9,7 +14,8 @@
 
   export default Vue.extend({
     props: {
-      label: {}
+      label: {},
+      loansize: {}
     }
   })
 </script>

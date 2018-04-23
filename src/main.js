@@ -6,8 +6,13 @@ import router from './router'
 import Vuetify from 'vuetify'
 import 'vuetify/dist/vuetify.min.css'
 import Mapbox from 'mapbox-gl-vue'
+import axios from 'axios'
+import VueAxios from 'vue-axios'
+
+import store from './store.js'
 
 Vue.use(Vuetify)
+Vue.use(VueAxios, axios)
 Vue.component('mapbox', Mapbox)
 
 Vue.config.productionTip = false
@@ -16,6 +21,7 @@ Vue.config.productionTip = false
 new Vue({
   el: '#app',
   router,
+  store,
   components: { App },
   template: '<App/>'
 })
