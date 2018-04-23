@@ -28,6 +28,7 @@
   import { mapGetters } from 'vuex'
   import PopupContent from './PopupContent.vue'
   import generateIdForInstance from '../utils/generateIdForInstance'
+  import chroma from 'chroma-js'
 
   // Seems hacky, but works: Setting saving the map
   // object in this map would cause the map to not load.
@@ -38,7 +39,8 @@
     data () {
       return {
         layers: [],
-        sources: []
+        sources: [],
+        colorLookup: {}
       }
     },
     components: {
@@ -65,7 +67,6 @@
       addTileLayer (map, instance, style) {
         const id = generateIdForInstance(instance)
 
-        console.log(instance)
         let label = ''
         if (instance.type === 'state') {
           label = instance.state
@@ -149,10 +150,11 @@
           return
         }
 
-        const colorMapper = this.generateColorMap(this.mapData.instances.map((i) => i.value))
+        this.setColorMap(this.mapData.instances.map((i) => i.value))
 
         for (let instance of this.mapData.instances) {
-          this.addTileLayer(this.map, instance, colorMapper(instance.value))
+          let style = this.getStyleForValue(instance.value)
+          this.addTileLayer(this.map, instance, style)
         }
       },
       resetMap () {
@@ -165,13 +167,33 @@
         }
         this.sources = []
       },
-      generateColorMap (values) {
-        return function (value) {
-          return {
-            'fill-color': '#088',
-            'fill-opacity': 0.4,
-            'fill-outline-color': '#0CC'
+      setColorMap (values) {
+        let colorLookup = {}
+        const sortedValues = values.sort((a, b) => a > b)
+        const colors = chroma.brewer.Greens
+        const scale = chroma.scale(colors).mode('lch').colors(values.length)
+        for (let i in sortedValues) {
+          colorLookup[sortedValues[i]] = scale[i]
+        }
+        this.colorLookup = colorLookup
+      },
+      getStyleForValue (value) {
+        let color = this.colorLookup[value]
+
+        // make sure this works, even with new keys
+        if (!color) {
+          for (let key in Object.keys(this.colorLookup).sort((a, b) => a > b)) {
+            color = this.colorLookup[key]
+            if (key > value) {
+              break
+            }
           }
+        }
+
+        return {
+          'fill-color': chroma(color).darken(1).hex(),
+          'fill-opacity': 0.5,
+          'fill-outline-color': chroma(color).darken(3).hex()
         }
       }
     }
