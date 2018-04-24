@@ -170,7 +170,8 @@
       setColorMap (values) {
         let colorLookup = {}
         const sortedValues = values.sort((a, b) => a > b)
-        const colors = chroma.brewer.Greens
+        let colors = chroma.brewer.Greens
+        colors.shift()
         const scale = chroma.scale(colors).mode('lch').colors(values.length)
         for (let i in sortedValues) {
           colorLookup[sortedValues[i]] = scale[i]
@@ -192,7 +193,7 @@
 
         return {
           'fill-color': chroma(color).darken(1).hex(),
-          'fill-opacity': 0.5,
+          'fill-opacity': 0.75,
           'fill-outline-color': chroma(color).darken(3).hex()
         }
       }
