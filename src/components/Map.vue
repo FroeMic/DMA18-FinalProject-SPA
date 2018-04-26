@@ -96,6 +96,7 @@
             'type': 'Feature',
             'properties': {
               'label': label,
+              'avg_loan': instance.avg_loan,
               'type': instance.type,
               'state': instance.state,
               'state_code': instance.state_code,
@@ -126,7 +127,6 @@
           'paint': style
         })
         this.layers.push(id)
-        // eof function
       },
       mapClicked (map, e) {
         this.addPopUp(map, e)
@@ -160,7 +160,8 @@
           {
             propsData: {
               label: feature.properties.label,
-              loansize: feature.properties.value
+              avgLoanSize: feature.properties.avg_loan,
+              predictedLoanSize: feature.properties.value
             }
           })
         vuePopup.$mount('#vue-popup-content')
