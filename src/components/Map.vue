@@ -53,6 +53,9 @@
       ]),
       map () {
         return _map
+      },
+      colorLookupKeys () {
+        return Object.keys(this.colorLookup).sort((a, b) => a > b)
       }
     },
     watch: {
@@ -64,21 +67,32 @@
       mapLoaded (map) {
         _map = map
       },
-      addTileLayer (map, instance, style) {
-        const id = generateIdForInstance(instance)
+      addTileLayer (map, instances, style) {
+        const id = generateIdForInstance(instances[0])
 
-        let label = ''
-        if (instance.type === 'state') {
-          label = instance.state
-        } else if (instance.type === 'county') {
-          label = instance.county
-        } else if (instance.type === 'census') {
-          label = 'Census Tract ' + instance.census
+        // for some reason the parsed census tracts have duplicate entries
+        if (map && map.getSource(id)) {
+          console.log('Duplicate ID :: ', id)
+          return
         }
 
-        map.addSource(id, {
-          'type': 'geojson',
-          'data': {
+        let features = []
+        for (let instance of instances) {
+          // ignore instances without coordinates
+          if (!instance.geojson.geometry.coordinates) {
+            continue
+          }
+
+          let label = ''
+          if (instance.type === 'state') {
+            label = instance.state
+          } else if (instance.type === 'county') {
+            label = instance.county
+          } else if (instance.type === 'census') {
+            label = 'Census Tract ' + instance.census_tract_number
+          }
+
+          features.push({
             'type': 'Feature',
             'properties': {
               'label': label,
@@ -92,10 +106,18 @@
               'value': instance.value
             },
             'geometry': instance.geojson.geometry
+          })
+        }
+
+        map.addSource(id, {
+          'type': 'geojson',
+          'data': {
+            'type': 'FeatureCollection',
+            'features': features
           }
         })
-
         this.sources.push(id)
+
         map.addLayer({
           'id': id,
           'type': 'fill',
@@ -152,9 +174,26 @@
 
         this.setColorMap(this.mapData.instances.map((i) => i.value))
 
+        // group by color for improved map performance
+        let grouping = {}
         for (let instance of this.mapData.instances) {
-          let style = this.getStyleForValue(instance.value)
-          this.addTileLayer(this.map, instance, style)
+          let selectedKey = this.colorLookupKeys[0]
+          for (let key of this.colorLookupKeys) {
+            if (key > instance.value) {
+              selectedKey = key
+              break
+            }
+          }
+
+          if (!grouping[selectedKey]) {
+            grouping[selectedKey] = []
+          }
+
+          grouping[selectedKey].push(instance)
+        }
+        for (let key of Object.keys(grouping)) {
+          let style = this.getStyleForValue(key)
+          this.addTileLayer(this.map, grouping[key], style)
         }
       },
       resetMap () {
@@ -170,11 +209,19 @@
       setColorMap (values) {
         let colorLookup = {}
         const sortedValues = values.sort((a, b) => a > b)
-        let colors = chroma.brewer.Greens
-        colors.shift()
-        const scale = chroma.scale(colors).mode('lch').colors(values.length)
-        for (let i in sortedValues) {
-          colorLookup[sortedValues[i]] = scale[i]
+
+        let maxColors = 30
+        let colorLimits = sortedValues
+        if (sortedValues.length > maxColors) {
+          colorLimits = chroma.limits(sortedValues, 'e', maxColors)
+        }
+
+        let colors = chroma.brewer.Greens.slice(1)
+
+        const scale = chroma.scale(colors).mode('lch').colors(colorLimits.length)
+
+        for (let i in colorLimits) {
+          colorLookup[colorLimits[i]] = scale[i]
         }
         this.colorLookup = colorLookup
       },
@@ -183,7 +230,7 @@
 
         // make sure this works, even with new keys
         if (!color) {
-          for (let key in Object.keys(this.colorLookup).sort((a, b) => a > b)) {
+          for (let key of this.colorLookupKeys) {
             color = this.colorLookup[key]
             if (key > value) {
               break
