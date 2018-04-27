@@ -1,5 +1,8 @@
 <template>
   <v-app>
+    <loading :active="loading"  :can-cancel="false" ></loading>
+    <vue-progress-bar></vue-progress-bar>
+
     <v-navigation-drawer
       persistent
       :mini-variant="miniVariant"
@@ -57,6 +60,8 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import Loading from 'vue-loading-overlay'
+import 'vue-loading-overlay/dist/vue-loading.min.css'
 
 export default {
   data () {
@@ -84,10 +89,14 @@ export default {
       showSnackBars: false
     }
   },
+  components: {
+    Loading
+  },
   computed: {
     // mix the getters into computed with object spread operator
     ...mapGetters([
       'debug',
+      'loading',
       'errors'
     ]),
     globalErrors () {
@@ -95,18 +104,26 @@ export default {
       return this.errors.filter((err) => this.debug && err.field == null)
     }
   },
-  // watch: {
-  //   'errors': (errors) => {
-  //     if (errors && errors.length > 0){
-  //       this.displayGlobalErrors()
-  //     }
-  //   }
-  // },
+  watch: {
+    'errors': function (errors) {
+      if (errors && errors.length > 0) {
+        this.displayGlobalErrors()
+      }
+    },
+    'loading': function (isLoading) {
+      if (isLoading) {
+        this.$Progress.start()
+      } else {
+        this.$Progress.finish()
+      }
+    }
+  },
   methods: {
     switchMapType (item) {
       this.$emit(item.event)
       this.$store.dispatch('loadApiVersion')
       this.$store.dispatch('loadMapData')
+      this.showDrawer = false
     }
   },
   name: 'App'

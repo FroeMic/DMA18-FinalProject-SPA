@@ -5,20 +5,31 @@ import App from './App'
 import router from './router'
 import Vuetify from 'vuetify'
 import 'vuetify/dist/vuetify.min.css'
-import Mapbox from 'mapbox-gl-vue'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
+import VueProgressBar from 'vue-progressbar'
 
+// components
+import Mapbox from 'mapbox-gl-vue'
+
+// store
 import store from './store.js'
 
 Vue.use(Vuetify)
 Vue.use(VueAxios, axios)
+Vue.use(VueProgressBar, {
+  color: 'rgb(143, 255, 199)',
+  failedColor: 'red',
+  height: '2px'
+})
+
+// component registration
 Vue.component('mapbox', Mapbox)
 
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */
-new Vue({
+window.Vue = new Vue({
   el: '#app',
   router,
   store,

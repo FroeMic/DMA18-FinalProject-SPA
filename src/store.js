@@ -12,6 +12,7 @@ export default new Vuex.Store({
   state: {
     apiVersion: 0,
     debug: true,
+    loading: true,
     mapData: [],
     loanForm: {
       title: 'Loan Application Form'
@@ -21,6 +22,7 @@ export default new Vuex.Store({
   getters: {
     apiVersion: state => state.apiVersion,
     debug: state => state.debug,
+    loading: state => state.loading,
     loanForm: state => state.loanForm,
     errors: state => state.errors,
     mapData: state => state.mapData
@@ -49,11 +51,14 @@ export default new Vuex.Store({
         'state_code': '06'
       })
 
+      context.commit('setLoading', true)
       axios.post(endpoint, data, headers)
         .then((response) => {
+          context.commit('setLoading', false)
           context.commit('setMapData', response.data.data)
         })
         .catch((error) => {
+          context.commit('setLoading', false)
           if (error.response &&
               error.response.data &&
               error.response.data.errors) {
@@ -65,6 +70,9 @@ export default new Vuex.Store({
   mutations: {
     setApiVersion (state, version) {
       state.apiVersion = version
+    },
+    setLoading (state, isLoading) {
+      state.loading = isLoading
     },
     setErrors (state, errors) {
       state.errors = errors
