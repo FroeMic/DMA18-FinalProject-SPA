@@ -34,5 +34,8 @@ window.Vue = new Vue({
   router,
   store,
   components: { App },
-  template: '<App/>'
+  template: '<App/>',
+  mounted () {
+    this.$store.dispatch('loadApiVersion')
+  }
 })

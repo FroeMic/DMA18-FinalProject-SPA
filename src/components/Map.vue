@@ -49,7 +49,8 @@
     computed: {
       // mix the getters into computed with object spread operator
       ...mapGetters([
-        'mapData'
+        'mapData',
+        'displayPredicted'
       ]),
       map () {
         return _map

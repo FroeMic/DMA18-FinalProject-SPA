@@ -12,8 +12,11 @@ export default new Vuex.Store({
   state: {
     apiVersion: 0,
     debug: true,
-    loading: true,
+    loading: false,
+    mapMode: 'average',
     mapData: [],
+    mapDataCache: {},
+    displayPredicted: false,
     loanForm: {
       title: 'Loan Application Form'
     },
@@ -25,7 +28,9 @@ export default new Vuex.Store({
     loading: state => state.loading,
     loanForm: state => state.loanForm,
     errors: state => state.errors,
-    mapData: state => state.mapData
+    mapData: state => state.mapData,
+    mapMode: state => state.mapMode,
+    displayPredicted: state => state.displayPredicted
   },
   actions: {
     loadApiVersion (context) {
@@ -38,20 +43,15 @@ export default new Vuex.Store({
           console.log(error.response)
         })
     },
-    loadMapData (context) {
-      const endpoint = HOST + '/api/v1/mapdata'
+    fetchMapData (context, config) {
+      context.commit('setLoading', true)
       const headers = {
         headers: {
           'Content-Type': 'application/json'
         }
       }
-      let data = JSON.stringify({
-        'detail_level': 'county',
-        'map_type': 'average',
-        'state_code': '06'
-      })
-
-      context.commit('setLoading', true)
+      const endpoint = HOST + '/api/v1/mapdata'
+      let data = JSON.stringify(config)
       axios.post(endpoint, data, headers)
         .then((response) => {
           context.commit('setLoading', false)
@@ -65,6 +65,44 @@ export default new Vuex.Store({
             context.commit('setErrors', error.response.data.errors)
           }
         })
+    },
+    loadMapData (context, config) {
+      const headers = {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }
+
+      context.commit('setLoading', true)
+      // first check whether this map is cached
+      const cachedMap = context.state.mapDataCache[config['detail_level']]
+      if (!cachedMap) {
+        context.dispatch('fetchMapData', config)
+      } else {
+        // we have this map type chached
+        const endpoint = HOST + '/api/v1/revision?detail_level=' + config['detail_level']
+        axios.get(endpoint, headers)
+          .then((response) => {
+            if (response.data.data.revision === cachedMap.revision) {
+              // if we have the current map data use it from the cache
+              context.commit('setMapData', JSON.parse(JSON.stringify(cachedMap)))
+              context.commit('setLoading', false)
+            } else {
+              // otherwise load them from the API
+              console.log('Setting mapData from api')
+              context.dispatch('fetchMapData', config)
+              context.commit('setLoading', false)
+            }
+          })
+          .catch((error) => {
+            context.commit('setLoading', false)
+            if (error.response &&
+                error.response.data &&
+                error.response.data.errors) {
+              context.commit('setErrors', error.response.data.errors)
+            }
+          })
+      }
     }
   },
   mutations: {
@@ -80,8 +118,9 @@ export default new Vuex.Store({
     clearErrors (state) {
       state.errors = []
     },
-    setMapData (state, data) {
-      state.mapData = data
+    setMapData (state, mapData) {
+      state.mapDataCache[mapData['detail_level']] = mapData
+      state.mapData = mapData
     }
   }
 })

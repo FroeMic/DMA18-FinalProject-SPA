@@ -105,11 +105,6 @@ export default {
     }
   },
   watch: {
-    'errors': function (errors) {
-      if (errors && errors.length > 0) {
-        this.displayGlobalErrors()
-      }
-    },
     'loading': function (isLoading) {
       if (isLoading) {
         this.$Progress.start()
@@ -121,8 +116,11 @@ export default {
   methods: {
     switchMapType (item) {
       this.$emit(item.event)
-      this.$store.dispatch('loadApiVersion')
-      this.$store.dispatch('loadMapData')
+      this.$store.dispatch('loadMapData', {
+        'detail_level': 'county',
+        'map_type': 'average',
+        'state_code': '06'
+      })
       this.showDrawer = false
     }
   },
