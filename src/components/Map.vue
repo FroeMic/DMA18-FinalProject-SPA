@@ -2,7 +2,6 @@
     <mapbox
     access-token="pk.eyJ1IjoiZnJvZWhsaWNoIiwiYSI6ImNqZzdhd3ljaTE1MHEyd3JuazY1MjZmZXAifQ.EqRkQ0rJGnHYmnlHb-dayg"
     :map-options="{
-      //style: 'mapbox://styles/froehlich/cjg8kc1770d782rppe9b9cu1q',
       style: 'mapbox://styles/mapbox/light-v9',
       center: [-122, 37],
       zoom: 5
@@ -40,7 +39,8 @@
       return {
         layers: [],
         sources: [],
-        colorLookup: {}
+        colorLookup: {},
+        mapDidLoad: false
       }
     },
     components: {
@@ -50,7 +50,9 @@
       // mix the getters into computed with object spread operator
       ...mapGetters([
         'mapData',
-        'displayPredicted'
+        'displayPredicted',
+        'mapMode',
+        'loanPredictions'
       ]),
       map () {
         return _map
@@ -62,11 +64,15 @@
     watch: {
       mapData: function () {
         this.redrawMap()
+      },
+      mapDidLoad: function () {
+        this.redrawMap()
       }
     },
     methods: {
       mapLoaded (map) {
         _map = map
+        this.mapDidLoad = true
       },
       addTileLayer (map, instances, style) {
         const id = generateIdForInstance(instances[0])
@@ -97,6 +103,7 @@
             'type': 'Feature',
             'properties': {
               'label': label,
+              '_id': instance._id,
               'avg_loan': instance.avg_loan,
               'type': instance.type,
               'state': instance.state,
@@ -104,8 +111,7 @@
               'county': instance.county,
               'county_code': instance.county_code,
               'census_tract': instance.census_tract,
-              'census_tract_number': instance.census_tract_number,
-              'value': instance.value
+              'census_tract_number': instance.census_tract_number
             },
             'geometry': instance.geojson.geometry
           })
@@ -162,26 +168,46 @@
             propsData: {
               label: feature.properties.label,
               avgLoanSize: feature.properties.avg_loan,
-              predictedLoanSize: feature.properties.value
+              predictedLoanSize: this.loanPredictions[feature.properties._id]
             }
           })
         vuePopup.$mount('#vue-popup-content')
       },
       redrawMap () {
+        let map = _map
+        if (!map) {
+          return
+        }
+
         this.resetMap()
 
         if (!this.mapData || !this.mapData.instances || this.mapData.instances.length === 0) {
           return
         }
 
-        this.setColorMap(this.mapData.instances.map((i) => i.value))
+        let getColorProperty = (instance) => {
+          return instance.avg_loan
+        }
+        if (this.mapMode === 'predicted') {
+          getColorProperty = (instance) => {
+            let predictedValue = this.loanPredictions[instance._id]
+            return predictedValue
+          }
+        }
+        if (this.mapMode === 'deviation') {
+          getColorProperty = (instance) => {
+            return instance.value - instance.avg_loan
+          }
+        }
+
+        this.setColorMap(this.mapData.instances.map((i) => getColorProperty(i)))
 
         // group by color for improved map performance
         let grouping = {}
         for (let instance of this.mapData.instances) {
-          let selectedKey = this.colorLookupKeys[0]
+          let selectedKey = this.colorLookupKeys[this.colorLookupKeys.length - 1]
           for (let key of this.colorLookupKeys) {
-            if (key > instance.value) {
+            if (key > getColorProperty(instance)) {
               selectedKey = key
               break
             }
@@ -195,16 +221,21 @@
         }
         for (let key of Object.keys(grouping)) {
           let style = this.getStyleForValue(key)
-          this.addTileLayer(this.map, grouping[key], style)
+          this.addTileLayer(map, grouping[key], style)
         }
       },
       resetMap () {
+        let map = _map
+        if (!map) {
+          return
+        }
+
         for (let layerID of this.layers) {
-          this.map.removeLayer(layerID)
+          map.removeLayer(layerID)
         }
         this.layers = []
         for (let sourceID of this.sources) {
-          this.map.removeSource(sourceID)
+          map.removeSource(sourceID)
         }
         this.sources = []
       },
@@ -215,7 +246,7 @@
         let maxColors = 30
         let colorLimits = sortedValues
         if (sortedValues.length > maxColors) {
-          colorLimits = chroma.limits(sortedValues, 'e', maxColors)
+          colorLimits = chroma.limits(sortedValues, 'q', maxColors)
         }
 
         let colors = chroma.brewer.Greens.slice(1)

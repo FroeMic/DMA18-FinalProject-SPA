@@ -66,7 +66,6 @@ import 'vue-loading-overlay/dist/vue-loading.min.css'
 export default {
   data () {
     return {
-      title: 'HeatMap',
       clipped: false,
       miniVariant: false,
       showDrawer: false,
@@ -74,20 +73,26 @@ export default {
       items: [
         {
           title: 'Average Loan Amount',
-          event: 'showAverageMapRequested'
+          event: 'showAverageMapRequested',
+          mapMode: 'average'
         },
         {
           title: 'Personal Loan Prediction',
-          event: 'showPersonalMapRequested'
+          event: 'showPersonalMapRequested',
+          mapMode: 'predicted'
         },
         {
           title: 'Deviation of Personal Prediction',
-          event: 'showPersonalDeviationMapRequested'
+          event: 'showPersonalDeviationMapRequested',
+          mapMode: 'deviation'
         }
       ],
       snackbarTimeout: 80000,
       showSnackBars: false
     }
+  },
+  mounted () {
+    this.switchMapType(this.items[0])
   },
   components: {
     Loading
@@ -97,11 +102,27 @@ export default {
     ...mapGetters([
       'debug',
       'loading',
-      'errors'
+      'errors',
+      'mapMode',
+      'mapDetailLevel',
+      'loanPredictions'
     ]),
     globalErrors () {
       this.showSnackBars = true
       return this.errors.filter((err) => this.debug && err.field == null)
+    },
+    title () {
+      let title = 'HMDA Loans 2016'
+      if (this.mapMode === 'average') {
+        title = 'Average ' + title
+      }
+      if (this.mapMode === 'predicted') {
+        title = 'Predicted HMDA Loans'
+      }
+      if (this.mapMode === 'deviation') {
+        title = 'Average vs Predicted HMDA Loans'
+      }
+      return title
     }
   },
   watch: {
@@ -116,11 +137,32 @@ export default {
   methods: {
     switchMapType (item) {
       this.$emit(item.event)
-      this.$store.dispatch('loadMapData', {
-        'detail_level': 'county',
-        'map_type': 'average',
-        'state_code': '06'
-      })
+      this.$store.commit('setMapMode', item.mapMode)
+
+      if (this.mapMode === 'average') {
+        this.$store.dispatch('loadMapData', {
+          'detail_level': this.mapDetailLevel,
+          'map_type': this.mapMode,
+          'state_code': '06'
+        })
+      }
+      if (this.mapMode === 'predicted') {
+        this.$store.dispatch('loadMapData', {
+          'detail_level': this.mapDetailLevel,
+          'map_type': this.mapMode,
+          'state_code': '06'
+        })
+        this.$router.push('form')
+      }
+      if (this.mapMode === 'deviation') {
+        this.$store.dispatch('loadMapData', {
+          'detail_level': this.mapDetailLevel,
+          'map_type': this.mapMode,
+          'state_code': '06'
+        })
+        this.$router.push('form')
+      }
+
       this.showDrawer = false
     }
   },

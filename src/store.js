@@ -13,13 +13,12 @@ export default new Vuex.Store({
     apiVersion: 0,
     debug: true,
     loading: false,
+    mapDetailLevel: 'county',
     mapMode: 'average',
     mapData: [],
     mapDataCache: {},
-    displayPredicted: false,
-    loanForm: {
-      title: 'Loan Application Form'
-    },
+    loanPredictions: {},
+    loanForm: {},
     errors: []
   },
   getters: {
@@ -30,7 +29,8 @@ export default new Vuex.Store({
     errors: state => state.errors,
     mapData: state => state.mapData,
     mapMode: state => state.mapMode,
-    displayPredicted: state => state.displayPredicted
+    mapDetailLevel: state => state.mapDetailLevel,
+    loanPredictions: state => state.loanPredictions
   },
   actions: {
     loadApiVersion (context) {
@@ -103,6 +103,34 @@ export default new Vuex.Store({
             }
           })
       }
+    },
+    loadPredictionData (context) {
+      const headers = {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }
+      context.commit('setLoading', true)
+      const endpoint = HOST + '/api/v1/predict'
+      const data = {
+        'map_type': context.state.mapMode,
+        'state_code': '06',
+        'detail_level': context.state.mapDetailLevel,
+        'loan_form': context.state.loanForm
+      }
+      return axios.post(endpoint, data, headers)
+        .then((response) => {
+          context.commit('setPredictionData', response.data.data)
+          context.commit('setLoading', false)
+        })
+        .catch((error) => {
+          context.commit('setLoading', false)
+          if (error.response &&
+              error.response.data &&
+              error.response.data.errors) {
+            context.commit('setErrors', error.response.data.errors)
+          }
+        })
     }
   },
   mutations: {
@@ -118,9 +146,40 @@ export default new Vuex.Store({
     clearErrors (state) {
       state.errors = []
     },
+    setMapMode (state, mapMode) {
+      let _mapMode = 'average'
+
+      if (mapMode === 'predicted') {
+        _mapMode = 'predicted'
+      }
+      if (mapMode === 'deviation') {
+        _mapMode = 'deviation'
+      }
+
+      state.mapMode = _mapMode
+    },
+    setMapDetailLevel (state, mapDetailLevel) {
+      let _mapDetailLevel = 'county'
+
+      if (mapDetailLevel === 'state') {
+        _mapDetailLevel = 'state'
+      }
+      if (mapDetailLevel === 'census') {
+        _mapDetailLevel = 'census'
+      }
+
+      state.mapDetailLevel = _mapDetailLevel
+    },
     setMapData (state, mapData) {
+      console.log(mapData)
       state.mapDataCache[mapData['detail_level']] = mapData
       state.mapData = mapData
+    },
+    setLoanFormField (state, field) {
+      state.loanForm[field['name']] = field['value']
+    },
+    setPredictionData (state, loanPredictions) {
+      state.loanPredictions = loanPredictions
     }
   }
 })
