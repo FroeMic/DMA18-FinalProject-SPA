@@ -186,6 +186,7 @@ export default {
           'map_type': this.mapMode,
           'state_code': '06'
         })
+        this.$router.push('/')
       }
       if (this.mapMode === 'predicted') {
         this.$store.dispatch('loadMapData', {
