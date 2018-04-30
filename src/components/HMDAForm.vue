@@ -30,7 +30,7 @@
                   <label>What is your median personal income per year?</label>
                   <v-text-field
                     label="Median Personal Income per Year"
-                    v-model="medianFamilyIncome"
+                    v-model="medianPersonalIncome"
                     type="number"
                     :rules="medianPersonalIncomeRules"
                     required
