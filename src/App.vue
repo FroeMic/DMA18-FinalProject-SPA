@@ -3,6 +3,20 @@
     <loading :active="loading"  :can-cancel="false" ></loading>
     <vue-progress-bar></vue-progress-bar>
 
+    <v-dialog v-model="firstVisit" max-width="500px">
+        <v-card>
+          <v-card-title>
+            Onboarding
+          </v-card-title>
+          <v-card-text>
+
+          </v-card-text>
+          <v-card-actions>
+            <v-btn color="primary" flat @click.stop="closeDialog">Close</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+
     <v-navigation-drawer
       persistent
       :mini-variant="miniVariant"
@@ -107,6 +121,7 @@ export default {
       'debug',
       'loading',
       'errors',
+      'firstVisit',
       'mapMode',
       'mapDetailLevel',
       'loanPredictions'
@@ -139,6 +154,9 @@ export default {
     }
   },
   methods: {
+    closeDialog () {
+      this.$store.commit('setVisited')
+    },
     switchMapType (item) {
       this.$emit(item.event)
       this.$store.commit('setMapMode', item.mapMode)
@@ -176,3 +194,10 @@ export default {
   name: 'App'
 }
 </script>
+
+<style>
+  .loading-overlay {
+    z-index: 100;
+  }
+</style>
+

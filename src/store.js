@@ -12,7 +12,8 @@ export default new Vuex.Store({
   strict: true,
   state: {
     apiVersion: 0,
-    debug: true,
+    debug: false,
+    firstVisit: true,
     loading: false,
     mapDetailLevel: 'county',
     mapMode: 'average',
@@ -25,6 +26,7 @@ export default new Vuex.Store({
   getters: {
     apiVersion: state => state.apiVersion,
     debug: state => state.debug,
+    firstVisit: state => state.firstVisit,
     loading: state => state.loading,
     loanForm: state => state.loanForm,
     errors: state => state.errors,
@@ -145,6 +147,9 @@ export default new Vuex.Store({
     },
     clearErrors (state) {
       state.errors = []
+    },
+    setVisited (state) {
+      state.firstVisit = false
     },
     setMapMode (state, mapMode) {
       let _mapMode = 'average'
