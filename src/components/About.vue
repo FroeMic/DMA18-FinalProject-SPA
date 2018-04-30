@@ -8,7 +8,12 @@
 
             <h2>About</h2>
             <div>
-              Enter the following information to get a personalized predicion on how much money you can expect when applying for a home loan.
+              <p><strong>Welcome to a instructive map about California Loan Application Data!</strong></p>
+              <p>We built this tool to illustrate the housing market in California.</p>
+              <img src="/static/onboarding.png" alt="" class="onboarding" />
+              <p>On the left side you can toggle the menu and switch between the three map modes.
+            Using the personal loan prediction mode, you can enter your demographic data and see the potential loan amounts you are expected to receive in each of the counties in California.
+            This prediction is done by a Machine Learning model, learning past relationships in the HMDA data to give insights to your prospective loan application.</p>
             </div>
 
             <h3>Team</h3>
@@ -97,6 +102,10 @@
 </script>
 
 <style scoped>
+.onboarding {
+  max-width:500px;
+  width:100%;
+}
 ul.team {
   list-style: none;
 
@@ -104,6 +113,8 @@ ul.team {
 ul.team li {
   margin: 20px 0;
   clear:both;
+  display:block;
+  min-height: 65px; 
 }
 
 ul.team li h4 {
