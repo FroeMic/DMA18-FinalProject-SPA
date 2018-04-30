@@ -8,7 +8,7 @@ const HOST_POOL = [
   'https://dma18-final-project-server.herokuapp.com',
   'https://dma18-final-project-server1.herokuapp.com',
   'https://dma18-final-project-server2.herokuapp.com',
-  'https://dma18-final-project-server3.herokuapp.com',
+  'https://dma18-final-project-server3.herokuapp.com'
 ]
 const HOST = HOST_POOL[Math.floor(Math.random() * HOST_POOL.length)]
 
