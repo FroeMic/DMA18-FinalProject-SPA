@@ -13,7 +13,49 @@
 
             <h3>Team</h3>
             <div>
-
+              <ul class="team">
+                <li id="michael"><div class="left"><img src="/static/mf.jpg" class="profile"></div>
+                <div class="desc"><h4>Michael</h4>
+                <a href="https://www.linkedin.com/in/m-froehlich/" class="icon"><img src="/static/linkedin.svg" alt="LinkedIn"></a>
+                <a href="https://github.com/FroeMic" class="icon"><img src="/static/github.svg" alt="Github"></a>
+                <p>A computer scientist by training, Michael is an Austrian, full-fledged, full-stacked developer loving to create sleek interfaces with a purpose.</p>
+                </div>
+                </li>
+                <li id="ashish"><div class="left"><img src="/static/ashish.jpg" class="profile"></div>
+                <div class="desc"><h4>Ashish</h4>
+                <a href="https://www.linkedin.com/in/ashishsur/" class="icon"><img src="/static/linkedin.svg" alt="LinkedIn"></a>
+                <a href="https://github.com/surashish" class="icon"><img src="/static/github.svg" alt="Github"></a>
+                <p>Being an experienced Data Analytics Consultant, focussed on data science and product management, Ashish pursues a Masters in Information Management and Systems.</p>
+                </div>
+                <li id="avi"><div class="left"><img src="/static/avi.jpg" class="profile"></div>
+                <div class="desc"><h4>Avi</h4>
+                <a href="https://www.linkedin.com/in/avidixit/" class="icon"><img src="/static/linkedin.svg" alt="LinkedIn"></a>
+                <a href="https://github.com/addt" class="icon"><img src="/static/github.svg" alt="Github"></a>
+                <p>Focussing on Software Engineering and Artificial Intelligence, Avi is an experienced data scientist with a strong drive.</p>
+                </div>
+                </li>
+                <li id="kar"><div class="left"><img src="/static/kar.jpg" class="profile"></div>
+                <div class="desc"><h4>Rohan</h4>
+                <a href="https://www.linkedin.com/in/rohan-kar/" class="icon"><img src="/static/linkedin.svg" alt="LinkedIn"></a>
+                <a href="https://github.com/rohankar" class="icon"><img src="/static/github.svg" alt="Github"></a>
+                <p>Looking at the intersection of Product Development, UX Research and Applied ML, Rohan has experience</p>
+                </div>
+                </li>
+                <li id="rohan"><div class="left"><img src="/static/rohan.jpg" class="profile"></div>
+                <div class="desc"><h4>Rohan</h4>
+                <a href="https://www.linkedin.com/in/rohankapuria/" class="icon"><img src="/static/linkedin.svg" alt="LinkedIn"></a>
+                <a href="https://github.com/rohan-kapuria" class="icon"><img src="/static/github.svg" alt="Github"></a>
+                <p>Rohan is a experienced and highly motivated Product/Program Manager who has worked on a wide range of consulting and agile/scrum software development projects.</p>
+                </div>
+                </li>
+                <li id="max"><div class="left"><img src="/static/max.jpg" class="profile"></div>
+                <div class="desc"><h4>Maximilian</h4>
+                <a href="https://www.linkedin.com/in/maximilian-wuehr/" class="icon"><img src="/static/linkedin.svg" alt="LinkedIn"></a>
+                <a href="https://github.com/mwuehr" class="icon"><img src="/static/github.svg" alt="Github"></a>
+                <p>With a background in economics and finance Maximilian is the ugly duckling on the team. Hopefully he will shine one day.</p>
+                </div>
+                </li>
+              </ul>
             </div>
 
             <h3>Source</h3>
@@ -55,5 +97,36 @@
 </script>
 
 <style scoped>
+ul.team {
+  list-style: none;
+
+}
+ul.team li {
+  margin: 20px 0;
+  clear:both;
+}
+
+ul.team li h4 {
+  display: inline-block;
+}
+
+.profile {
+  height: 65px;
+  width: auto;
+  border-radius: 33px;
+}
+
+.icon {
+  height: 21px;
+  width: 21px;
+  margin: 0px 0 2px 5px;
+  display: inline-block;
+}
+
+.desc {
+  float:left;
+  margin: 0 0 0 10px;
+  width: 85%
+}
 
 </style>

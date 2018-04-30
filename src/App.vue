@@ -6,13 +6,18 @@
     <v-dialog v-model="firstVisit" max-width="500px">
         <v-card>
           <v-card-title>
-            Onboarding
+            <strong>Welcome to a instructive map about California Loan Application Data!</strong>
           </v-card-title>
           <v-card-text>
-
+            We built this tool to illustrate the housing market in California. <br />
+            <img src="/static/onboarding.png" alt="" class="onboarding" />
+            On the left side you can toggle the menu and switch between the three map modes.
+            Using the personal loan prediction mode, you can enter your demographic data and see the potential loan amounts you are expected to receive in each of the counties in California.
+            This prediction is done by a Machine Learning model, learning past relationships in the HMDA data to give insights to your prospective loan application.
+            
           </v-card-text>
           <v-card-actions>
-            <v-btn color="primary" flat @click.stop="closeDialog">Close</v-btn>
+            <v-btn color="primary" flat @click.stop="closeDialog">Let's go!</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -198,6 +203,9 @@ export default {
 <style>
   .loading-overlay {
     z-index: 100;
+  }
+  img.onboarding {
+    width: 100%
   }
 </style>
 
