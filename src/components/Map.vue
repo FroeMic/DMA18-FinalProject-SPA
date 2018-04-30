@@ -1,31 +1,37 @@
 <template>
-    <mapbox
-    access-token="pk.eyJ1IjoiZnJvZWhsaWNoIiwiYSI6ImNqZzdhd3ljaTE1MHEyd3JuazY1MjZmZXAifQ.EqRkQ0rJGnHYmnlHb-dayg"
-    :map-options="{
-      style: 'mapbox://styles/mapbox/light-v9',
-      center: [-122, 37],
-      zoom: 5
-    }"
-    :geolocate-control="{
-      show: true, 
-      position: 'top-left'
-    }"
-    :scale-control="{
-      show: true,
-      position: 'top-left'
-    }"
-    :fullscreen-control="{
-      show: true,
-      position: 'top-left'
-    }"
-     @map-load="mapLoaded"
-     @map-click="mapClicked"
-     @map-mousemove="mapMouseMoved">
-    </mapbox>
+    <div>
+      <loading :active="loading" :can-cancel="false" ></loading>
+      <mapbox
+      access-token="pk.eyJ1IjoiZnJvZWhsaWNoIiwiYSI6ImNqZzdhd3ljaTE1MHEyd3JuazY1MjZmZXAifQ.EqRkQ0rJGnHYmnlHb-dayg"
+      :map-options="{
+        style: 'mapbox://styles/mapbox/light-v9',
+        center: [-122, 37],
+        zoom: 5
+      }"
+      :geolocate-control="{
+        show: true, 
+        position: 'top-left'
+      }"
+      :scale-control="{
+        show: true,
+        position: 'top-left'
+      }"
+      :fullscreen-control="{
+        show: true,
+        position: 'top-left'
+      }"
+      @map-load="mapLoaded"
+      @map-click="mapClicked"
+      @map-mousemove="mapMouseMoved">
+      </mapbox>
+  </div>
+
 </template>
 <script>
   import { mapGetters } from 'vuex'
   import PopupContent from './PopupContent.vue'
+  import Loading from 'vue-loading-overlay'
+  import 'vue-loading-overlay/dist/vue-loading.min.css'
   import generateIdForInstance from '../utils/generateIdForInstance'
   import chroma from 'chroma-js'
 
@@ -44,7 +50,8 @@
       }
     },
     components: {
-      PopupContent
+      PopupContent,
+      Loading
     },
     computed: {
       // mix the getters into computed with object spread operator
@@ -52,7 +59,8 @@
         'mapData',
         'displayPredicted',
         'mapMode',
-        'loanPredictions'
+        'loanPredictions',
+        'loading'
       ]),
       map () {
         return _map
