@@ -174,7 +174,6 @@ export default {
   },
   methods: {
     closeDialog () {
-      this.switchMapType(this.items[0])
       this.$store.commit('setVisited')
     },
     switchMapType (item) {
@@ -219,6 +218,7 @@ export default {
   .loading-overlay {
     z-index: 100;
   }
+
   img.onboarding {
     width: 100%
   }
