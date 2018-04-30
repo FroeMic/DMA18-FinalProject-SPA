@@ -13,6 +13,12 @@
         formatCurrency(avgLoanSize)
       }}
     </div>
+
+    <div v-if="predictedLoanSize">
+      Difference:  {{ 
+        formatCurrency(predictedLoanSize - avgLoanSize)
+       }}
+    </div>
   </div>
 </template>
 

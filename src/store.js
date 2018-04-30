@@ -4,7 +4,8 @@ import axios from 'axios'
 
 Vue.use(Vuex)
 
-const HOST = 'http://localhost:8082'
+const HOST_POOL = ['http://localhost:8082']
+const HOST = HOST_POOL[Math.floor(Math.random() * HOST_POOL.length)]
 
 export default new Vuex.Store({
 
@@ -89,7 +90,6 @@ export default new Vuex.Store({
               context.commit('setLoading', false)
             } else {
               // otherwise load them from the API
-              console.log('Setting mapData from api')
               context.dispatch('fetchMapData', config)
               context.commit('setLoading', false)
             }
@@ -171,7 +171,6 @@ export default new Vuex.Store({
       state.mapDetailLevel = _mapDetailLevel
     },
     setMapData (state, mapData) {
-      console.log(mapData)
       state.mapDataCache[mapData['detail_level']] = mapData
       state.mapData = mapData
     },

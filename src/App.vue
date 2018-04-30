@@ -85,6 +85,10 @@ export default {
           title: 'Deviation of Personal Prediction',
           event: 'showPersonalDeviationMapRequested',
           mapMode: 'deviation'
+        },
+        {
+          title: 'About',
+          event: 'showAboutPage'
         }
       ],
       snackbarTimeout: 80000,
@@ -161,6 +165,9 @@ export default {
           'state_code': '06'
         })
         this.$router.push('form')
+      }
+      if (item.title === 'About') {
+        this.$router.push('about')
       }
 
       this.showDrawer = false

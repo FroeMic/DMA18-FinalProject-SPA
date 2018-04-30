@@ -14,93 +14,132 @@
               (We do not save any of the information you enter on our servers.)
             </div>
 
-            <v-form v-model="valid" ref="form" lazy-validation>
-              <v-text-field
-                label="Median Family Income per Year"
-                v-model="medianFamilyIncome"
-                type="number"
-                :rules="medianFamilyIncomeRules"
-                required
-              ></v-text-field>
-              <v-text-field
-                label="Median Personal Income per Year"
-                v-model="medianFamilyIncome"
-                type="number"
-                :rules="medianPersonalIncomeRules"
-                required
-              ></v-text-field>
-              <v-select
-                label="Purchaser Type"
-                :items="purchaserTypeNameOptions"
-                v-model="purchaserTypeName"
-                :rules="purchaserTypeNameRules"
-                single-line
-                required
-              ></v-select>
-              <v-select
-                label="Property Type"
-                :items="propertyTypeNameOptions"
-                v-model="propertyTypeName"
-                :rules="propertyTypeNameRules"
-                single-line
-                required
-              ></v-select>
-              <v-select
-                label="Preapproval Name"
-                :items="preApprovalNameOptions"
-                v-model="preApprovalName"
-                :rules="preApprovalNameRules"
-                single-line
-                required
-              ></v-select>
-              <v-select
-                label="Loan Purpose"
-                :items="loanPurposeNameOptions"
-                v-model="loanPurposeName"
-                :rules="loanPurposeNameRules"
-                single-line
-                required
-              ></v-select>
-              <v-select
-                label="HOEPA Status"
-                :items="hopeaStatusOptions"
-                v-model="hopeaStatus"
-                :rules="hopeaStatusNameRules"
-                single-line
-                required
-              ></v-select>
-              <v-select
-                label="Applicant Sex"
-                :items="applicantSexOptions"
-                v-model="applicantSex"
-                :rules="applicantSexRules"
-                single-line
-                required
-              ></v-select>
-              <v-select
-                label="Applicant Race"
-                :items="applicantRaceOptions"
-                v-model="applicantRace"
-                :rules="applicantRaceRules"
-                single-line
-                required
-              ></v-select>
-              <v-select
-                label="Co-Applicant Sex"
-                :items="coApplicantSexOptions"
-                v-model="coApplicantSex"
-                :rules="coApplicantSexRules"
-                single-line
-                required
-              ></v-select>
-              <v-select
-                label="Co-Applicant Race"
-                :items="coApplicantRaceOptions"
-                v-model="coApplicantRace"
-                :rules="coApplicantRaceRules"
-                single-line
-                required
-              ></v-select>
+            <v-form v-model="valid" ref="form" :lazy-validation="false">
+              <v-layout row wrap>
+                <v-flex xs12 md6>
+                  <label>What is your median family income per year?</label>
+                  <v-text-field
+                    label="Median Family Income per Year"
+                    v-model="medianFamilyIncome"
+                    type="number"
+                    :rules="medianFamilyIncomeRules"
+                    required
+                  ></v-text-field>
+                </v-flex>
+                <v-flex xs12 md6>  
+                  <label>What is your median personal income per year?</label>
+                  <v-text-field
+                    label="Median Personal Income per Year"
+                    v-model="medianFamilyIncome"
+                    type="number"
+                    :rules="medianPersonalIncomeRules"
+                    required
+                  ></v-text-field>
+                </v-flex>
+                <v-flex xs12 md8>
+                  <label>What type of property is the home loan for?</label>
+                  <v-select
+                    ref="propertyTypeSelect"
+                    label="Property Type"
+                    :items="propertyTypeNameOptions"
+                    v-model="propertyTypeName"
+                    :rules="propertyTypeNameRules"
+                    single-line
+                    required
+                  ></v-select>
+                </v-flex>
+                <v-flex md4 class="zero-height"></v-flex>
+                <v-flex xs12 md8>
+                  <label>What's the purpose of the loan?</label>
+                  <v-select
+                    ref="loanPurposeNameSelect"
+                    label="Loan Purpose"
+                    :items="loanPurposeNameOptions"
+                    v-model="loanPurposeName"
+                    :rules="loanPurposeNameRules"
+                    single-line
+                    required
+                  ></v-select>
+                </v-flex>
+                <v-flex md4 class="zero-height"></v-flex>
+                <v-flex xs12 md6>
+                  <label>Did you request preapproval?</label>
+                  <v-select
+                    ref="preApprovalNameSelect"
+                    label="Preapproval Name"
+                    :items="preApprovalNameOptions"
+                    v-model="preApprovalName"
+                    :rules="preApprovalNameRules"
+                    single-line
+                    required
+                  ></v-select>
+                </v-flex>
+                <v-flex md4 class="zero-height"></v-flex>
+                <v-flex xs12 md6>
+                  <label>Is this a HOEPA loan?</label>
+                  <v-select
+                    ref="hopaStatusSelect"
+                    label="HOEPA Status"
+                    :items="hopeaStatusOptions"
+                    v-model="hopeaStatus"
+                    :rules="hopeaStatusNameRules"
+                    single-line
+                    required
+                  ></v-select>
+                </v-flex>
+                <v-flex md6 class="zero-height"></v-flex>
+                <v-flex xs12 md6>
+                  <label>What's your gender?</label>
+                  <v-select
+                    ref="applicantSexSelect"
+                    label="Applicant Sex"
+                    :items="applicantSexOptions"
+                    v-model="applicantSex"
+                    :rules="applicantSexRules"
+                    single-line
+                    required
+                  ></v-select>
+                </v-flex>
+                <v-flex md6 class="zero-height"></v-flex>
+                <v-flex xs12 md6>
+                  <label>What's your race?</label>
+                  <v-select
+                    ref="applicantRaceSelect"
+                    label="Applicant Race"
+                    :items="applicantRaceOptions"
+                    v-model="applicantRace"
+                    :rules="applicantRaceRules"
+                    single-line
+                    required
+                  ></v-select>
+                </v-flex>
+                <v-flex md6 class="zero-height"></v-flex>
+                <v-flex xs12 md6>
+                  <label>What's your co-applicants gender?</label>
+                  <v-select
+                    ref="coApplicantSexSelect"
+                    label="Co-Applicant Sex"
+                    :items="coApplicantSexOptions"
+                    v-model="coApplicantSex"
+                    :rules="coApplicantSexRules"
+                    single-line
+                    required
+                  ></v-select>
+                </v-flex>
+                <v-flex md6 class="zero-height"></v-flex>
+                <v-flex xs12 md6>
+                  <label>What's your co-applicants race?</label>
+                  <v-select
+                    ref="coApplicantRaceSelect"
+                    label="Co-Applicant Race"
+                    :items="coApplicantRaceOptions"
+                    v-model="coApplicantRace"
+                    :rules="coApplicantRaceRules"
+                    single-line
+                    required
+                  ></v-select>
+                </v-flex>
+              </v-layout>
 
               <v-btn @click="submit" :disabled="!valid">
                 submit
@@ -131,43 +170,29 @@
       medianPersonalIncomeRules: [
         v => !!v || 'Median Personal Income is required'
       ],
-      purchaserTypeNameRules: [
-        // v => {
-        //   console.log(v, !!v)
-        //   return !!v || 'Purchaser Type is required'
-        // }
-      ],
       propertyTypeNameRules: [
-        // v => !!v || 'Property Type is required'
+        v => !!v || 'Property Type is required'
       ],
       preApprovalNameRules: [
-        // v => !!v || 'Preapproval Name is required'
+        v => !!v || 'Preapproval Name is required'
       ],
       loanPurposeNameRules: [
-        // v => !!v || 'Loan Purpose is required'
+        v => !!v || 'Loan Purpose is required'
       ],
       hopeaStatusNameRules: [
-        // v => !!v || 'Hopea Status is required'
+        v => !!v || 'Hopea Status is required'
       ],
       applicantSexRules: [
-        // v => !!v || 'Applicant Sex is required'
+        v => !!v || 'Applicant Sex is required'
       ],
       applicantRaceRules: [
-        // v => !!v || 'Applicant Race is required'
+        v => !!v || 'Applicant Race is required'
       ],
       coApplicantSexRules: [
-
+        v => !!v || 'Co-Applicant Race is required'
       ],
       coApplicantRaceRules: [
-
-      ],
-      purchaserTypeNameOptions: [
-        'Life insurance company, credit union, mortgage bank, or finance company',
-        'Ginnie Mae (GNMA)', 'Fannie Mae (FNMA)',
-        'Other type of purchaser',
-        'Loan was not originated or was not sold in calendar year covered by register',
-        'Freddie Mac (FHLMC)', 'Commercial bank, savings bank or savings association',
-        'Private securitization', 'Affiliate institution', 'Farmer Mac (FAMC)'
+        v => !!v || 'Co-Applicant Race is required'
       ],
       propertyTypeNameOptions: [
         'One-to-four family dwelling (other than manufactured housing)',
@@ -262,6 +287,7 @@
             'name': 'propertyTypeName',
             'value': value
           })
+          this.$refs.propertyTypeSelect.validate()
         }
       },
       preApprovalName: {
@@ -273,6 +299,7 @@
             'name': 'preApprovalName',
             'value': value
           })
+          this.$refs.preApprovalNameSelect.validate()
         }
       },
       loanPurposeName: {
@@ -284,6 +311,7 @@
             'name': 'loanPurposeName',
             'value': value
           })
+          this.$refs.loanPurposeNameSelect.validate()
         }
       },
       hopeaStatus: {
@@ -295,6 +323,7 @@
             'name': 'hopeaStatus',
             'value': value
           })
+          this.$refs.hopaStatusSelect.validate()
         }
       },
       applicantSex: {
@@ -306,6 +335,7 @@
             'name': 'applicantSex',
             'value': value
           })
+          this.$refs.applicantSexSelect.validate()
         }
       },
       applicantRace: {
@@ -317,6 +347,7 @@
             'name': 'applicantRace',
             'value': value
           })
+          this.$refs.applicantRaceSelect.validate()
         }
       },
       coApplicantSex: {
@@ -328,6 +359,7 @@
             'name': 'coApplicantSex',
             'value': value
           })
+          this.$refs.coApplicantSexSelect.validate()
         }
       },
       coApplicantRace: {
@@ -339,6 +371,7 @@
             'name': 'coApplicantRace',
             'value': value
           })
+          this.$refs.coApplicantRaceSelect.validate()
         }
       }
     },
@@ -359,4 +392,19 @@
 
 <style scoped>
 
+  form {
+    margin-top: 40px;
+  }
+
+  label {
+    font-weight: 700;
+  }
+
+  .zero-height {
+    height: 0 !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+  }
 </style>

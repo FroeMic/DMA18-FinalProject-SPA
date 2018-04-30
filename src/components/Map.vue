@@ -196,7 +196,7 @@
         }
         if (this.mapMode === 'deviation') {
           getColorProperty = (instance) => {
-            return instance.value - instance.avg_loan
+            return this.loanPredictions[instance._id] - instance.avg_loan
           }
         }
 
@@ -249,14 +249,34 @@
           colorLimits = chroma.limits(sortedValues, 'q', maxColors)
         }
 
-        let colors = chroma.brewer.Greens.slice(1)
+        if (this.mapMode === 'deviation') {
+          const smallerZero = colorLimits.filter((v) => v < 0)
+          const biggerZero = colorLimits.filter((v) => v >= 0)
 
-        const scale = chroma.scale(colors).mode('lch').colors(colorLimits.length)
+          let colors1 = chroma.brewer.OrRd.slice(2).reverse()
+          let scale1 = chroma.scale(colors1).mode('lch').colors(smallerZero.length)
 
-        for (let i in colorLimits) {
-          colorLookup[colorLimits[i]] = scale[i]
+          for (let i in smallerZero) {
+            colorLookup[smallerZero[i]] = scale1[i]
+          }
+
+          let colors2 = chroma.brewer.Greens.slice(2).reverse()
+          let scale2 = chroma.scale(colors2).mode('lch').colors(biggerZero.length)
+
+          for (let i in biggerZero) {
+            colorLookup[biggerZero[i]] = scale2[i]
+          }
+
+          this.colorLookup = colorLookup
+        } else {
+          let colors = chroma.brewer.Greens.slice(1)
+          const scale = chroma.scale(colors).mode('lch').colors(colorLimits.length)
+
+          for (let i in colorLimits) {
+            colorLookup[colorLimits[i]] = scale[i]
+          }
+          this.colorLookup = colorLookup
         }
-        this.colorLookup = colorLookup
       },
       getStyleForValue (value) {
         let color = this.colorLookup[value]
