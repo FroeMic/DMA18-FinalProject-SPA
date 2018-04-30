@@ -219,6 +219,7 @@ export default {
   .loading-overlay {
     z-index: 100;
   }
+  
   img.onboarding {
     width: 100%
   }

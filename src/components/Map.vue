@@ -311,6 +311,11 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style>
+.loading-overlay {
+  z-index: 100 !important;
+}
+  
+
 #map {
   width: 100%;
   height: calc(100vh - 56px);
