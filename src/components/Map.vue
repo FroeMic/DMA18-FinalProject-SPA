@@ -66,7 +66,7 @@
         return _map
       },
       colorLookupKeys () {
-        return Object.keys(this.colorLookup).sort((a, b) => a > b)
+        return Object.keys(this.colorLookup).sort((a, b) => Number(a) - Number(b))
       }
     },
     watch: {
@@ -258,8 +258,8 @@
         }
 
         if (this.mapMode === 'deviation') {
-          const smallerZero = colorLimits.filter((v) => v < 0)
-          const biggerZero = colorLimits.filter((v) => v >= 0)
+          const smallerZero = [-1].concat(colorLimits.filter((v) => v < 0))
+          const biggerZero = [1].concat(colorLimits.filter((v) => v >= 0))
 
           let colors1 = chroma.brewer.OrRd.slice(2).reverse()
           let scale1 = chroma.scale(colors1).mode('lch').colors(smallerZero.length)
@@ -276,8 +276,16 @@
           }
 
           this.colorLookup = colorLookup
-        } else {
+        } else if (this.mapMode === 'average') {
           let colors = chroma.brewer.Greens.slice(1)
+          const scale = chroma.scale(colors).mode('lch').colors(colorLimits.length)
+
+          for (let i in colorLimits) {
+            colorLookup[colorLimits[i]] = scale[i]
+          }
+          this.colorLookup = colorLookup
+        } else {
+          let colors = chroma.brewer.Blues.slice(1)
           const scale = chroma.scale(colors).mode('lch').colors(colorLimits.length)
 
           for (let i in colorLimits) {
