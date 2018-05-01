@@ -75,7 +75,7 @@
                   ></v-select>
                 </v-flex>
                 <v-flex md4 class="zero-height"></v-flex>
-                <v-flex xs12 md6>
+                <!-- <v-flex xs12 md6>
                   <label>Is this a HOEPA loan?</label>
                   <v-select
                     ref="hopaStatusSelect"
@@ -87,7 +87,7 @@
                     required
                   ></v-select>
                 </v-flex>
-                <v-flex md6 class="zero-height"></v-flex>
+                <v-flex md6 class="zero-height"></v-flex> -->
                 <v-flex xs12 md6>
                   <label>What's your gender?</label>
                   <v-select
