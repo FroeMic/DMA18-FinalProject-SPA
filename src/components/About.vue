@@ -51,7 +51,7 @@
                 <div class="desc"><h4>Rohan</h4>
                 <a target="_blank" href="https://www.linkedin.com/in/rohan-kar/" class="icon"><img src="/static/linkedin.svg" alt="LinkedIn"></a>
                 <a target="_blank" href="https://github.com/rohankar" class="icon"><img src="/static/github.svg" alt="Github"></a>
-                <p>Looking at the intersection of Product Development, UX Research and Applied ML, Rohan has experience</p>
+                <p>Looking at the intersection of Product Development, UX Research and Applied ML, Rohan has experience in Applied Research and as a Full-Stack Engineer.</p>
                 </div>
                 </li>
                 <li id="rohan"><div class="left"><img src="/static/rohan.jpg" class="profile"></div>
