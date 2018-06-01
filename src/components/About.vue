@@ -76,7 +76,7 @@
               <div>
                 <h5>Report</h5>
                 <div>A report describing how we used the data provided by the HMDA to build the predictive models for this project.</div>
-                <a href="#" target="_blank" disabled>Download Report</a>
+                <a href="/static/DMA_Final_Report.pdf" target="_blank" disabled>Download Report</a>
               </div>
               <div>
                 <h5>Webserver Repository</h5>
